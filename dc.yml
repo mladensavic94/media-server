@@ -188,8 +188,8 @@ services:
       - CREATE_TUN_DEVICE=true
       - TRANSMISSION_RPC_AUTHENTICATION_REQUIRED=true
       - TRANSMISSION_RPC_HOST_WHITELIST="127.0.0.1"
-      - TRANSMISSION_RPC_PASSWORD=tuki
-      - TRANSMISSION_RPC_USERNAME=tuki
+      - TRANSMISSION_RPC_PASSWORD=$TRPC_PASS
+      - TRANSMISSION_RPC_USERNAME=$TRPC_USER
       - TRANSMISSION_UMASK=2
       - TRANSMISSION_RATIO_LIMIT=1
       - TRANSMISSION_RATIO_LIMIT_ENABLED=true
@@ -205,7 +205,8 @@ services:
       - TZ=$TZ
     volumes:
       - $DOCKERDIR/appdata/readarr:/config
-      - $DATADIR/reads:/data
+      - $DATADIR/downloads/completed/readarr:/downloads
+      - $DATADIR/reads:/bmedia
 ############################# MAINTENANCE
 
   dockergc:
