@@ -193,7 +193,19 @@ services:
       - TRANSMISSION_UMASK=2
       - TRANSMISSION_RATIO_LIMIT=1
       - TRANSMISSION_RATIO_LIMIT_ENABLED=true
-
+  readarr:
+    container_name: readarr
+    image: ghcr.io/hotio/readarr
+    ports:
+      - "8787:8787"
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+      - UMASK=002
+      - TZ=$TZ
+    volumes:
+      - $DOCKERDIR/appdata/readarr:/config
+      - $DATADIR/reads:/data
 ############################# MAINTENANCE
 
   dockergc:
