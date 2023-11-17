@@ -144,16 +144,17 @@ services:
       - /dev/shm:/data/transcode
 
 # jfa-go - media server
-  jfa-go:
-    <<: *common-keys-media # See EXTENSION FIELDS at the top
-    image: hrfee/jfa-go
-    container_name: jfa-go
+  jellyseerr:
+    image: fallenbagel/jellyseerr:latest
+    container_name: jellyseerr
+    environment:
+          - LOG_LEVEL=debug
+          - TZ=$TZ
     ports:
-      - "8056:8056"
+          - 5055:5055
     volumes:
-      - $DOCKERDIR/appdata/jfa-go:/config
-      - $DOCKERDIR/appdata/jellyfin:/jf
-
+          - $DOCKERDIR/appdata/jellyseerr:/app/config
+    restart: unless-stopped
 # TransmissionVPN
   transmission-vpn:
     container_name: transmission-vpn
