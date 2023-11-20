@@ -59,6 +59,7 @@ services:
       - $DOCKERDIR/appdata/npm/config:/config 
       - $DOCKERDIR/appdata/npm/letsencrypt:/etc/letsencrypt
       - $DOCKERDIR/appdata/npm/data:/data
+      - $DATADIR/homepage:/usr/share/nginx/html
     environment:
       DB_SQLITE_FILE: "/config/database.sqlite"
       DISABLE_IPV6: 'true'
