@@ -59,7 +59,6 @@ services:
       - $DOCKERDIR/appdata/npm/config:/config 
       - $DOCKERDIR/appdata/npm/letsencrypt:/etc/letsencrypt
       - $DOCKERDIR/appdata/npm/data:/data
-      - $DATADIR/homepage:/var/www/html
     environment:
       DB_SQLITE_FILE: "/config/database.sqlite"
       DISABLE_IPV6: 'true'
@@ -145,17 +144,16 @@ services:
       - /dev/shm:/data/transcode
 
 # jfa-go - media server
-  jellyseerr:
-    image: fallenbagel/jellyseerr:latest
-    container_name: jellyseerr
-    environment:
-          - LOG_LEVEL=debug
-          - TZ=$TZ
-    ports:
-          - 5055:5055
-    volumes:
-          - $DOCKERDIR/appdata/jellyseerr:/app/config
-    restart: unless-stopped
+  # jfa-go:
+    # <<: *common-keys-media # See EXTENSION FIELDS at the top
+    # image: hrfee/jfa-go
+    # container_name: jfa-go
+    # ports:
+      # - "8056:8056"
+    # volumes:
+      # - $DOCKERDIR/appdata/jfa-go:/config
+      # - $DOCKERDIR/appdata/jellyfin:/jf
+
 # TransmissionVPN
   transmission-vpn:
     container_name: transmission-vpn
@@ -190,25 +188,40 @@ services:
       - CREATE_TUN_DEVICE=true
       - TRANSMISSION_RPC_AUTHENTICATION_REQUIRED=true
       - TRANSMISSION_RPC_HOST_WHITELIST="127.0.0.1"
-      - TRANSMISSION_RPC_PASSWORD=$TRPC_PASS
-      - TRANSMISSION_RPC_USERNAME=$TRPC_USER
+      - TRANSMISSION_RPC_PASSWORD=tuki
+      - TRANSMISSION_RPC_USERNAME=tuki
       - TRANSMISSION_UMASK=2
       - TRANSMISSION_RATIO_LIMIT=1
       - TRANSMISSION_RATIO_LIMIT_ENABLED=true
-  readarr:
-    container_name: readarr
-    image: ghcr.io/hotio/readarr
-    ports:
-      - "8787:8787"
+  # readarr:
+    # container_name: readarr
+    # image: ghcr.io/hotio/readarr
+    # ports:
+      # - "8787:8787"
+    # environment:
+      # - PUID=$PUID
+      # - PGID=$PGID
+      # - UMASK=002
+      # - TZ=$TZ
+    # volumes:
+      # - $DOCKERDIR/appdata/readarr:/config
+      # - $DATADIR/reads:/data
+  lazylibrarian:
+    image: lscr.io/linuxserver/lazylibrarian:latest
+    container_name: lazylibrarian
     environment:
       - PUID=$PUID
       - PGID=$PGID
-      - UMASK=002
       - TZ=$TZ
+      #- DOCKER_MODS=linuxserver/mods:universal-calibre|linuxserver/mods:lazylibrarian-ffmpeg #optional
     volumes:
-      - $DOCKERDIR/appdata/readarr:/config
-      - $DATADIR/downloads/completed/readarr:/downloads
-      - $DATADIR/reads:/bmedia
+      - $DOCKERDIR/appdata/lazylibrarian:/config
+      - $DATADIR/downloads/completed/lazylibrarian:/downloads
+      - $DATADIR/reads:/books #optional
+    ports:
+      - 5299:5299
+    restart: unless-stopped
+
 ############################# MAINTENANCE
 
   dockergc:
