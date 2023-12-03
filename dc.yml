@@ -89,6 +89,7 @@ services:
       - $DOCKERDIR/appdata/sonarr:/config
       - $DATADIR/downloads/completed/sonarr:/downloads
       - $DATADIR/media/shows:/bmedia
+      - $DATADIR/media/anime:/anime
       - "/etc/localtime:/etc/localtime:ro"
     environment:
       <<: *default-tz-puid-pgid
