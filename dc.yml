@@ -181,9 +181,7 @@ services:
       - 1.0.0.1
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - $DOCKERDIR/appdata/transmission-vpn:/data
-      - ${USERDIR}/docker/shared:/shared
-      - $DATADIR/downloads:/data/watch  
+      - $DOCKERDIR/appdata/transmission-vpn:/config
       - $DATADIR/downloads/completed:/data/completed
       - $DATADIR/downloads/incomplete:/data/incomplete
     environment:
