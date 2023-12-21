@@ -144,16 +144,6 @@ services:
       - $DATADIR/reads:/reads
       - /dev/shm:/data/transcode
 
-# jfa-go - media server
-  # jfa-go:
-    # <<: *common-keys-media # See EXTENSION FIELDS at the top
-    # image: hrfee/jfa-go
-    # container_name: jfa-go
-    # ports:
-      # - "8056:8056"
-    # volumes:
-      # - $DOCKERDIR/appdata/jfa-go:/config
-      # - $DOCKERDIR/appdata/jellyfin:/jf
   jellyseerr:
     image: fallenbagel/jellyseerr:latest
     container_name: jellyseerr
@@ -215,24 +205,23 @@ services:
     # volumes:
       # - $DOCKERDIR/appdata/readarr:/config
       # - $DATADIR/reads:/data
-  lazylibrarian:
-    image: lscr.io/linuxserver/lazylibrarian:latest
-    container_name: lazylibrarian
-    environment:
-      - PUID=$PUID
-      - PGID=$PGID
-      - TZ=$TZ
-      #- DOCKER_MODS=linuxserver/mods:universal-calibre|linuxserver/mods:lazylibrarian-ffmpeg #optional
-    volumes:
-      - $DOCKERDIR/appdata/lazylibrarian:/config
-      - $DATADIR/downloads/completed/lazylibrarian:/downloads
-      - $DATADIR/reads:/books #optional
-    ports:
-      - 5299:5299
-    restart: unless-stopped
+  # lazylibrarian:
+    # image: lscr.io/linuxserver/lazylibrarian:latest
+    # container_name: lazylibrarian
+    # environment:
+      # - PUID=$PUID
+      # - PGID=$PGID
+      # - TZ=$TZ
+      # #- DOCKER_MODS=linuxserver/mods:universal-calibre|linuxserver/mods:lazylibrarian-ffmpeg #optional
+    # volumes:
+      # - $DOCKERDIR/appdata/lazylibrarian:/config
+      # - $DATADIR/downloads/completed/lazylibrarian:/downloads
+      # - $DATADIR/reads:/books #optional
+    # ports:
+      # - 5299:5299
+    # restart: unless-stopped
 
-############################# MAINTENANCE
-
+############################# MAINTENANCE & MONITORING
   dockergc:
     <<: *common-keys-apps # See EXTENSION FIELDS at the top
     image: clockworksoul/docker-gc-cron:latest
@@ -254,6 +243,8 @@ services:
     <<: *common-keys-core # See EXTENSION FIELDS at the top
     image: containrrr/watchtower
     container_name: watchtower
+    ports:
+     - 8780:8080
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock # Use Docker Socket Proxy and comment this line for improved security.
     environment:
@@ -265,3 +256,21 @@ services:
       WATCHTOWER_SCHEDULE: "0 30 12 * * *" # Everyday at 12:30
       # DOCKER_HOST: tcp://socket-proxy:2375 # Use this if you have Socket Proxy enabled.
       DOCKER_API_VERSION: "1.40"
+  speedtest:
+    <<: *common-keys-core # See EXTENSION FIELDS at the top
+    container_name: speedtest
+    image: henrywhitaker3/speedtest-tracker
+    ports:
+     - 8765:80
+    volumes:
+     - $DOCKERDIR/appdata/speedtest:/config
+    environment:
+      <<: *default-tz-puid-pgid
+     - OOKLA_EULA_GDPR=true
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    ports:
+      - 3000:3000
+    volumes:
+      - $DOCKERDIR/appdata/homepage:/app/config # Make sure your local config directory exists
