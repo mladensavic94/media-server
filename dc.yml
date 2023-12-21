@@ -266,7 +266,7 @@ services:
      - $DOCKERDIR/appdata/speedtest:/config
     environment:
       <<: *default-tz-puid-pgid
-     - OOKLA_EULA_GDPR=true
+      OOKLA_EULA_GDPR: true
   homepage:
     image: ghcr.io/gethomepage/homepage:latest
     container_name: homepage
